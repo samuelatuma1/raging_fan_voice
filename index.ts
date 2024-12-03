@@ -163,48 +163,4 @@ process.on('uncaughtException', (err) => {
   });
 });
 
-// const socket = new WebSocket('wss://plankton-app-4u7bx.ondigitalocean.app');
-// socket.onopen = () => {
-//   const message = JSON.stringify({
-//     "event_id": "evt_y4n9c8fpb43ew1Xeb",
-//     "type": "session.update",
-//     "session": {
-//       "modalities": ["text", "audio"],
-//       "instructions": "",
-//       "voice": "alloy",
-//       "input_audio_format": "pcm16",
-//       "output_audio_format": "pcm16",
-//       "input_audio_transcription": null,
-//       "turn_detection": null,
-//       "tools": [],
-//       "tool_choice": "auto",
-//       "temperature": 0.8,
-//       "max_response_output_tokens": 4096
-//     }
-//   });
-
-//   socket.send(message);
-//   console.log("Message sent:", message);
-// }
-// socket.onmessage = (event: {}) => {
-//   console.log("Message received from server:");
-//   console.log({event});
-
-//   // If the server sends JSON, you can parse it like this:
-//   try {
-//     const serverMessage = JSON.parse(event.toString());
-//     console.log("Parsed server message:", serverMessage);
-//   } catch (error) {
-//     console.error("Error parsing server message:", error);
-//   }
-// };
-
-// // When an error occurs
-// socket.onerror = (error) => {
-//   console.error('WebSocket Error:', error);
-// };
-
-// // When the connection is closed
-// socket.onclose = (event) => {
-//   console.log("WebSocket connection closed:", event);
-// };
+console.log("Updated")

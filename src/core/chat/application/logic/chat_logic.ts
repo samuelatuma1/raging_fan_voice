@@ -282,7 +282,9 @@ export default class ChatLogic implements IChatLogic{
     getVoiceCallInstructionForChat = async (chat: VoiceChatRequest): Promise<string> => {
         // get chat, 
         let cacheChatInstructionId = `${this.ChatCacheInstructionPrefix}${chat.chatId}`
+        await this.cacheService.deleteAsync(cacheChatInstructionId)
         let cachedInstruction = await this.cacheService.getAsync<string>(cacheChatInstructionId);
+        console.log({cachedInstruction})
         if(cachedInstruction && cachedInstruction !== '{}'){
             console.log(`Cached Instruction in use for ${chat.chatId}: ${cachedInstruction}`)
             return cachedInstruction;

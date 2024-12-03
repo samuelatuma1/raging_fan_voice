@@ -138,7 +138,11 @@ export class OpenAIWebSocket implements IAIWebSocket {
             voiceChat.chatId = new Types.ObjectId(chatId);
             voiceChat.senderId = new Types.ObjectId(senderId);
             let sessionInstruction = await this.chatLogic.getVoiceCallInstructionForChat(voiceChat)
+            
             event.session.instructions = sessionInstruction;
+            if(event.session?.voice_chat){
+                delete event.session.voice_chat
+            }
             console.log({event})
         }
         if(event.type === "response.create"){

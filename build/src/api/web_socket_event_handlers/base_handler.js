@@ -119,6 +119,9 @@ let OpenAIWebSocket = class OpenAIWebSocket {
             voiceChat.senderId = new mongoose_1.Types.ObjectId(senderId);
             let sessionInstruction = await this.chatLogic.getVoiceCallInstructionForChat(voiceChat);
             event.session.instructions = sessionInstruction;
+            if (event.session?.voice_chat) {
+                delete event.session.voice_chat;
+            }
             console.log({ event });
         }
         if (event.type === "response.create") {

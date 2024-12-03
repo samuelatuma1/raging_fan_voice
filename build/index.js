@@ -134,5 +134,5 @@ process.on('uncaughtException', (err) => {
         });
     });
 });
-console.log("Updated");
+console.log("Updated again.");
 //# sourceMappingURL=index.js.map

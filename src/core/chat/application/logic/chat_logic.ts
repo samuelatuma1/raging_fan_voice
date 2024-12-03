@@ -283,8 +283,8 @@ export default class ChatLogic implements IChatLogic{
         // get chat, 
         let cacheChatInstructionId = `${this.ChatCacheInstructionPrefix}${chat.chatId}`
         let cachedInstruction = await this.cacheService.getAsync<string>(cacheChatInstructionId);
-        if(cachedInstruction){
-            console.log(`Cached Instruction in use for ${chat.chatId}`)
+        if(cachedInstruction && cachedInstruction !== '{}'){
+            console.log(`Cached Instruction in use for ${chat.chatId}: ${cachedInstruction}`)
             return cachedInstruction;
         }
         let voiceChat = await this.getChatForVoice(chat);
@@ -294,7 +294,7 @@ export default class ChatLogic implements IChatLogic{
 
 
 
-        let instruction = this.buildInstructionQuery(chat, celebrity, user)
+        let instruction = await this.buildInstructionQuery(chat, celebrity, user)
         this.cacheService.addAsync(cacheChatInstructionId, instruction, 60 * 30)
         return instruction;
 

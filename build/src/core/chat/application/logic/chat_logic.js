@@ -48,6 +48,7 @@ let ChatLogic = class ChatLogic {
     cacheService;
     CacheChatDurationInSeconds = 60 * 60;
     ChatCachePrefix = `CHAT_`;
+    ChatCacheInstructionPrefix = `CHAT_INSTRUCTION_`;
     constructor(chatRepository, messageRepository, celebrityLogic, authLogic, conversationAI, newsService, eventTracer, cacheService) {
         this.chatRepository = chatRepository;
         this.messageRepository = messageRepository;
@@ -253,10 +254,17 @@ let ChatLogic = class ChatLogic {
     };
     getVoiceCallInstructionForChat = async (chat) => {
         // get chat, 
+        let cacheChatInstructionId = `${this.ChatCacheInstructionPrefix}${chat.chatId}`;
+        let cachedInstruction = await this.cacheService.getAsync(cacheChatInstructionId);
+        if (cachedInstruction) {
+            console.log(`Cached Instruction in use for ${chat.chatId}`);
+            return cachedInstruction;
+        }
         let voiceChat = await this.getChatForVoice(chat);
         // evtTracer.say(`Getting participants`)
         let { celebrity, user } = await this.getCelebrityAndUserFromChatResponse(voiceChat);
         let instruction = this.buildInstructionQuery(chat, celebrity, user);
+        this.cacheService.addAsync(cacheChatInstructionId, instruction, 60 * 30);
         return instruction;
     };
 };

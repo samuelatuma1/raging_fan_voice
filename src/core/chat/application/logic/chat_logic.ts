@@ -33,6 +33,7 @@ import SerializationUtility from "../../../../core/shared/application/utils/util
 export default class ChatLogic implements IChatLogic{
     private readonly CacheChatDurationInSeconds: number = 60 * 60
     private readonly ChatCachePrefix: string = `CHAT_`;
+    private readonly ChatCacheInstructionPrefix: string = `CHAT_INSTRUCTION_`;
     public constructor(
         @inject(IIChatRepository) private readonly chatRepository: IChatRepository,
         @inject(IIMessageRepository) private readonly messageRepository: IMessageRepository,
@@ -280,6 +281,12 @@ export default class ChatLogic implements IChatLogic{
 
     getVoiceCallInstructionForChat = async (chat: VoiceChatRequest): Promise<string> => {
         // get chat, 
+        let cacheChatInstructionId = `${this.ChatCacheInstructionPrefix}${chat.chatId}`
+        let cachedInstruction = await this.cacheService.getAsync<string>(cacheChatInstructionId);
+        if(cachedInstruction){
+            console.log(`Cached Instruction in use for ${chat.chatId}`)
+            return cachedInstruction;
+        }
         let voiceChat = await this.getChatForVoice(chat);
 
         // evtTracer.say(`Getting participants`)
@@ -288,7 +295,7 @@ export default class ChatLogic implements IChatLogic{
 
 
         let instruction = this.buildInstructionQuery(chat, celebrity, user)
-
+        this.cacheService.addAsync(cacheChatInstructionId, instruction, 60 * 30)
         return instruction;
 
     }

@@ -98,6 +98,7 @@ var ChatLogic = /** @class */ (function () {
         this.cacheService = cacheService;
         this.CacheChatDurationInSeconds = 60 * 60;
         this.ChatCachePrefix = "CHAT_";
+        this.ChatCacheInstructionPrefix = "CHAT_INSTRUCTION_";
         this.saveChatRecentHistoryInCache = function (chat) { return __awaiter(_this, void 0, Promise, function () {
             var ex_1, evtInstance;
             return __generator(this, function (_a) {
@@ -406,16 +407,26 @@ var ChatLogic = /** @class */ (function () {
             });
         }); };
         this.getVoiceCallInstructionForChat = function (chat) { return __awaiter(_this, void 0, Promise, function () {
-            var voiceChat, _a, celebrity, user, instruction;
+            var cacheChatInstructionId, cachedInstruction, voiceChat, _a, celebrity, user, instruction;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.getChatForVoice(chat)];
+                    case 0:
+                        cacheChatInstructionId = "" + this.ChatCacheInstructionPrefix + chat.chatId;
+                        return [4 /*yield*/, this.cacheService.getAsync(cacheChatInstructionId)];
                     case 1:
+                        cachedInstruction = _b.sent();
+                        if (cachedInstruction) {
+                            console.log("Cached Instruction in use for " + chat.chatId);
+                            return [2 /*return*/, cachedInstruction];
+                        }
+                        return [4 /*yield*/, this.getChatForVoice(chat)];
+                    case 2:
                         voiceChat = _b.sent();
                         return [4 /*yield*/, this.getCelebrityAndUserFromChatResponse(voiceChat)];
-                    case 2:
+                    case 3:
                         _a = _b.sent(), celebrity = _a.celebrity, user = _a.user;
                         instruction = this.buildInstructionQuery(chat, celebrity, user);
+                        this.cacheService.addAsync(cacheChatInstructionId, instruction, 60 * 10);
                         return [2 /*return*/, instruction];
                 }
             });

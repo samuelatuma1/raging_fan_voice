@@ -141,19 +141,32 @@ let OpenAIWebSocket = class OpenAIWebSocket {
             });
         }
     };
+    reconnect = () => {
+        if (this.wss) {
+            this.wss.close();
+        }
+        setTimeout(() => {
+            console.log("Reconnecting WebSocket...");
+            this.connect();
+        }, 1000); // Reconnect after 1 second
+    };
     relayEventFromOpenAIToWebsocketServer = async (server) => {
         this.connect();
         if (!this.wss.isConnected()) {
             throw new Error("Wss server not connected");
         }
         this.wss.on('message', (data) => {
-            // console.log("relayEventFromOpenAIToWebsocketServer")
+            console.log("relayEventFromOpenAIToWebsocketServer");
             const event = JSON.parse(data.toString());
             event.originatedFrom = "OPENAI";
             console.log(`Relaying message "${event.type}" from OpenAI`);
             // console.log({event})
             if (event.type === "error") {
-                console.log({ event });
+                console.log({ ...event, _ERROR: "OpenAI error" });
+                if (event.error?.code === "session_expired") {
+                    console.log("Session expired. Reconnecting...");
+                    this.reconnect();
+                }
             }
             server.send(JSON.stringify(event));
         });

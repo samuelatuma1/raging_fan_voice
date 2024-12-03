@@ -56,6 +56,7 @@ export declare class OpenAIWebSocket implements IAIWebSocket {
     constructor(chatLogic: IChatLogic);
     relayMessageToOpenAI: (data: string | RawData, client: WebSocket) => Promise<void>;
     connect: () => void;
+    reconnect: () => void;
     relayEventFromOpenAIToWebsocketServer: (server: WebSocket) => Promise<void>;
     handleClose: () => void;
 }

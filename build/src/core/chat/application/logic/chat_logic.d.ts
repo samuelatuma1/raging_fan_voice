@@ -23,6 +23,7 @@ export default class ChatLogic implements IChatLogic {
     private readonly cacheService;
     private readonly CacheChatDurationInSeconds;
     private readonly ChatCachePrefix;
+    private readonly ChatCacheInstructionPrefix;
     constructor(chatRepository: IChatRepository, messageRepository: IMessageRepository, celebrityLogic: ICelebrityLogic, authLogic: IAuthLogic, conversationAI: IConversationAI, newsService: INewsService, eventTracer: IEventTracer, cacheService: ICacheService);
     private saveChatRecentHistoryInCache;
     private getChatRecentHistoryInCache;

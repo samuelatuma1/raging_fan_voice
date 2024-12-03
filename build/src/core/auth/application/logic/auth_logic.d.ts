@@ -1,0 +1,40 @@
+import UserPermission from "../../../../core/auth/domain/entity/permission";
+import IUserPermissionRepository from "../contract/persistence/permission_repository";
+import IUserRoleRepository from "../contract/persistence/role_repository";
+import UserRole from "../../../../core/auth/domain/entity/role";
+import { CreatePermissionRequest, CreateRoleRequest, CreateUserRequest, ValidateAccessCodeResponse } from "../../domain/dto/request/auth_request";
+import { IAuthLogic } from "../contract/logic/auth_logic";
+import User from "../../../../core/auth/domain/entity/user";
+import IUserRepository from "../contract/persistence/user_repository";
+import IFileService from "../../../../core/shared/application/contract/services/files/file_service";
+import { Types } from "mongoose";
+import { IJwtService } from "../contract/service/jwt_service";
+import { JwtTokenPayload } from "../../../../core/auth/domain/model/jwt_token_payload";
+import { SignedInUser } from "../../../../core/auth/domain/dto/response/auth_response";
+import IEventTracer from "../../../../core/shared/application/contract/observability/event_tracer";
+import ICacheService from "../../../../core/shared/application/contract/data_access/cache/cache_service";
+import { IMailService } from "../../../../core/chat/application/contract/service/mail_service";
+export default class AuthLogic implements IAuthLogic {
+    private readonly userPermissionRepository;
+    private readonly userRoleRepository;
+    private readonly userRepository;
+    private readonly cacheService;
+    private readonly fileService;
+    private readonly jwtService;
+    private readonly mailService;
+    private readonly eventTracer;
+    private readonly UserCachePrefix;
+    private readonly AccessCodeCachePrefix;
+    constructor(userPermissionRepository: IUserPermissionRepository, userRoleRepository: IUserRoleRepository, userRepository: IUserRepository, cacheService: ICacheService, fileService: IFileService, jwtService: IJwtService, mailService: IMailService, eventTracer: IEventTracer);
+    createPermission: (createPermissionRequest: CreatePermissionRequest) => Promise<UserPermission>;
+    createRole: (createRoleRequest: CreateRoleRequest) => Promise<UserRole>;
+    createUser: (newUser: CreateUserRequest) => Promise<SignedInUser>;
+    getUser: (id: Types.ObjectId, options?: {
+        useCache: boolean;
+    }) => Promise<User>;
+    createJwtPayload: (user: User) => Promise<JwtTokenPayload>;
+    generateCode: () => Promise<ValidateAccessCodeResponse>;
+    isValidAccessCode: (code: string) => Promise<boolean>;
+    validateAccessCode: (code: string) => Promise<ValidateAccessCodeResponse>;
+    getUsersWithPermission: (permissionName: string) => Promise<User[]>;
+}

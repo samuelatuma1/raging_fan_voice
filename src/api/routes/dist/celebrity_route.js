@@ -1,0 +1,15 @@
+"use strict";
+exports.__esModule = true;
+var celebrity_controller_1 = require("../../api/controllers/celebrity_controller");
+var multer_upload_1 = require("../../api/middlewares/multer_upload");
+var program_1 = require("../../api/program");
+var express_1 = require("express");
+var celebrityController = program_1.iocContainer.resolve(celebrity_controller_1["default"]);
+var celebrityRouter = express_1.Router();
+celebrityRouter.post("/create", multer_upload_1.upload.fields([{ name: 'image', maxCount: 1 }, { name: 'icons', maxCount: 4 }, { name: 'avatar', maxCount: 1 }]), celebrityController.createCelebrity);
+celebrityRouter.post("/train", celebrityController.trainCelebrity);
+celebrityRouter.post("/news", celebrityController.testAINews);
+celebrityRouter.post("/chat", celebrityController.initiateChat);
+celebrityRouter.get("/", celebrityController.getCelebrities);
+celebrityRouter.post("/converse", celebrityController.chat);
+exports["default"] = celebrityRouter;

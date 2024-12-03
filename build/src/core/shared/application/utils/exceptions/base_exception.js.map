@@ -1,0 +1,1 @@
+{"version":3,"file":"base_exception.js","sourceRoot":"","sources":["../../../../../../../src/core/shared/application/utils/exceptions/base_exception.ts"],"names":[],"mappings":";;AAAA,MAAqB,aAAc,SAAQ,KAAK;IACrC,OAAO,CAAsB;IACpC,YAAmB,OAAe,EAAE,SAAgC,EAAE;QAClE,KAAK,CAAC,OAAO,CAAC,CAAA;QACd,IAAI,CAAC,OAAO,GAAG,MAAM,CAAC;IAC1B,CAAC;CAEJ;AAPD,gCAOC"}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Crypto API AES Encryption Example</title>
+</head>
+<body>
+    <h2>Encrypt and Decrypt with Web Crypto API</h2>
+    <p>Message to Encrypt: <input type="text" id="message" value="Hello, World!"></p>
+    <button onclick="encryptMessage()">Encrypt</button>
+    <p>Encrypted Message: <span id="encrypted"></span></p>
+    <button onclick="decryptMessage()">Decrypt</button>
+    <p>Decrypted Message: <span id="decrypted"></span></p>
+
+    <script>
+        
+        const EncryptAsync = async (txt, mykey, myiv) => {
+            let enc = new TextEncoder();
+            let encodedKey = enc.encode(mykey);
+            let encodedIv = enc.encode(myiv);
+            let encodedTxt = enc.encode(txt)
+
+            const key = await window.crypto.subtle.importKey("raw", encodedKey, { name: "AES-CBC" },false,["encrypt"] );
+            const encrypted = await window.crypto.subtle.encrypt({name: "AES-CBC",iv: encodedIv},key,encodedTxt);
+
+            return btoa(String.fromCharCode(...new Uint8Array(encrypted))); // Convert to Base64
+        };
+
+        const DecryptAsync = async (txt, mykey, myiv) => {
+            let enc = new TextEncoder();
+            let encodedKey = enc.encode(mykey);
+            const iv = enc.encode(myiv);
+            const encryptedData = Uint8Array.from(atob(txt), c => c.charCodeAt(0));
+            
+            const key = await window.crypto.subtle.importKey("raw", encodedKey, { name: "AES-CBC"}, false, ["decrypt"] )
+            const decrypted = await window.crypto.subtle.decrypt({name: "AES-CBC",iv: iv}, key, encryptedData);
+
+            return new TextDecoder().decode(decrypted);
+        };
+
+
+        let key, iv, encryptedData;
+        // Encrypt the message
+        async function encryptMessage() {
+            const message = document.getElementById("message").value;
+            let isResolved = false;
+            
+            data = await EncryptAsync(message, "1234567890123456", "1234567890123456")
+            document.getElementById("encrypted").textContent = data;
+            encryptedData = data;
+            return data;
+            
+        }
+
+        // Decrypt the message
+        async function decryptMessage() {
+            
+            DecryptAsync(encryptedData, "1234567890123456", "1234567890123456" ).then(
+                data => {
+                    decryptedMessage = data
+                    document.getElementById("decrypted").textContent = decryptedMessage;
+                }
+            )
+           
+        }
+
+
+        const userInput = `https://x.com/api?title=<script>alert('Hello, world')<script>&age=40`;
+        const safeUrlParam = encodeURIComponent(userInput);
+        console.log({safeUrlParam});
+        alert(safeUrlParam);
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+"use strict";
+exports.__esModule = true;
+var jwt_auth_middleware_1 = require("../../api/middlewares/jwt_auth_middleware");
+var auth_controller_1 = require("../../api/controllers/auth_controller");
+var program_1 = require("../../api/program");
+var express_1 = require("express");
+var authController = program_1.iocContainer.resolve(auth_controller_1["default"]);
+var jwtMiddleware = program_1.iocContainer.resolve(jwt_auth_middleware_1["default"]);
+var authRouter = express_1.Router();
+authRouter.post("/create", jwtMiddleware.verifyUserHasAccess, authController.createUser);
+authRouter.post("/validate", authController.validateCode);
+authRouter.get("/access_code", authController.genererateCode);
+exports["default"] = authRouter;

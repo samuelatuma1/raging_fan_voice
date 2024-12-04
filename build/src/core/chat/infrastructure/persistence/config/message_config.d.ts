@@ -1,5 +1,5 @@
 import { Model, Schema } from "mongoose";
-import { Message } from "core/chat/domain/entity/message";
+import { Message } from "../../../../../core/chat/domain/entity/message";
 export declare const MessageSchema: Schema<Message, Model<Message, any, any, any, import("mongoose").Document<unknown, any, Message> & Message & Required<{
     _id: import("mongoose").Types.ObjectId;
 }> & {

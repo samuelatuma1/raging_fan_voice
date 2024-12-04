@@ -1,7 +1,6 @@
 import { model, Model, Schema } from "mongoose";
-import { Chat } from "../../../../../core/chat/domain/entity/chat";
-import { Participant } from "core/chat/domain/entity/participant";
-import { Message } from "core/chat/domain/entity/message";
+import { Message } from "../../../../../core/chat/domain/entity/message";
+import DateUtility from "../../../../../core/shared/application/utils/utilities/date_utility";
 
 export const MessageSchema = new Schema<Message> ({
     chatId: Schema.Types.ObjectId,
@@ -9,6 +8,7 @@ export const MessageSchema = new Schema<Message> ({
     messageText: String,
     senderId: Schema.Types.ObjectId,
     messageType: String,
+    sentAt: {type: Date, default: DateUtility.getUTCNow()},
     isAIGenerated: Boolean
 })
 

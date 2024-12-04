@@ -163,7 +163,7 @@ export class OpenAIWebSocket implements IAIWebSocket {
                 }
             )
             this.wss = wss
-        // this.handleMessage();
+            // this.handleMessage();
             this.wss.on('error', (error) => {
                 console.log({error})
             })

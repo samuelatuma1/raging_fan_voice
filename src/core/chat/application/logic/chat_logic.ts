@@ -239,7 +239,7 @@ export default class ChatLogic implements IChatLogic{
                 messageText: textMessageRequest.message,
                 senderId: user._id,
                 messageType: MessageType.text,
-                sentAt: textMessageRequest.sentAt
+                sentAt: textMessageRequest.sentAt ?? DateUtility.getUTCNow()
             })
             
             let celebrityResponse = new Message({
@@ -249,7 +249,7 @@ export default class ChatLogic implements IChatLogic{
                 senderId: celebrity._id,
                 messageType: MessageType.text,
                 isAIGenerated: true,
-                sentAt: textMessageRequest.sentAt
+                sentAt: textMessageRequest.sentAt ?? DateUtility.getUTCNow()
             })
 
             this.updateChatCacheAndDb(chat, celebrityResponse, userMessage) // no need to await this update
@@ -271,12 +271,14 @@ export default class ChatLogic implements IChatLogic{
         // save chat and response on cache/db
 
         let addedMessages = await this.messageRepository.addManyAsync([userMessage, celebrityResponse]) // no need to await
-        
+        console.log("DATE OOO")
+        console.log("DATE OOO")
+        console.log("DATE OOO")
+        console.log({userMessage, celebrityResponse})
         chat.messages.unshift(userMessage)
         chat.messages.unshift(celebrityResponse);
 
         let cached = await this.saveChatRecentHistoryInCache(chat);
-        console.log({cached, addedMessages})
     }
 
     getVoiceCallInstructionForChat = async (chat: VoiceChatRequest): Promise<string> => {

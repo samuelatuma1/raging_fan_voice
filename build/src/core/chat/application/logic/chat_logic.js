@@ -223,7 +223,7 @@ let ChatLogic = class ChatLogic {
                 messageText: textMessageRequest.message,
                 senderId: user._id,
                 messageType: message_type_1.MessageType.text,
-                sentAt: textMessageRequest.sentAt
+                sentAt: textMessageRequest.sentAt ?? date_utility_1.default.getUTCNow()
             });
             let celebrityResponse = new message_1.Message({
                 chatId: chat._id,
@@ -232,7 +232,7 @@ let ChatLogic = class ChatLogic {
                 senderId: celebrity._id,
                 messageType: message_type_1.MessageType.text,
                 isAIGenerated: true,
-                sentAt: textMessageRequest.sentAt
+                sentAt: textMessageRequest.sentAt ?? date_utility_1.default.getUTCNow()
             });
             this.updateChatCacheAndDb(chat, celebrityResponse, userMessage); // no need to await this update
             // return response
@@ -247,10 +247,13 @@ let ChatLogic = class ChatLogic {
     updateChatCacheAndDb = async (chat, celebrityResponse, userMessage) => {
         // save chat and response on cache/db
         let addedMessages = await this.messageRepository.addManyAsync([userMessage, celebrityResponse]); // no need to await
+        console.log("DATE OOO");
+        console.log("DATE OOO");
+        console.log("DATE OOO");
+        console.log({ userMessage, celebrityResponse });
         chat.messages.unshift(userMessage);
         chat.messages.unshift(celebrityResponse);
         let cached = await this.saveChatRecentHistoryInCache(chat);
-        console.log({ cached, addedMessages });
     };
     getVoiceCallInstructionForChat = async (chat) => {
         // get chat, 
